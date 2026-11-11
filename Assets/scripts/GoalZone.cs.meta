@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 4e698f8706c08704ba89f98bbb797ace
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - goal: {instanceID: 0}
+  - pantallaVictoria: {fileID: 8838639017073614800, guid: afac75e647b27484fbe09f93711a1772, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
