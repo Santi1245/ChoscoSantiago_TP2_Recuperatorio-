@@ -2,54 +2,53 @@ using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
 {
-
     [Header("Configuracion Salud")]
-    [SerializeField] private float maxHealth = 100f; 
-    private float currentHealth; 
-    public float CurrentHealth => currentHealth;//usamos getter y setter para el gameManager - solo lectura
+    [SerializeField] private float maxHealth = 100f;
+    private float currentHealth;
+
+    public float CurrentHealth => currentHealth;
 
     [SerializeField] private bool isDead;
-    public bool IsDead
+    public bool IsDead => isDead;
+
+    private void Awake()
     {
-        get => isDead;
-          
+        currentHealth = maxHealth;
+        isDead = false;
+        Debug.Log($"Salud actual: {currentHealth}");
     }
-    
-    private void Awake() 
-    { 
-        currentHealth = maxHealth; 
-        isDead = false; 
-        Debug.Log($"Salud actual: {currentHealth}"); // NUEVO: muestra la vida al arrancar
-    }
+
     public void TakeDamage(float amount)
     {
         if (isDead) return;
-        currentHealth -= amount;
-        //clamp permite normalizar un valor de acuerdo a los limites
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-        
-        /*
-         * math.clamp(5, 1, 10) => 5 (esta dentro del rango)
-         * math.clamp(-4, 0, 10) => 0 (es menor que el minimo, devuelve 0)
-         * math.clamp(15, 0, 10) => 10 (es mayor que el maximo, devuelve 10)
-         */
+        if (amount <= 0f) return; // NUEVO: evita daño negativo
 
-        //Debug.Log($"Salud actual: " + currentHealth);
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
         Debug.Log($"Salud actual: {currentHealth}");
+
         if (currentHealth <= 0f)
         {
             Dead();
         }
     }
-    private void Dead() 
-    { 
-        isDead = true; 
-        Debug.Log("Character eliminado"); 
-        // Notificación al GameManager si existiera 
-        //GameManager.Instance.ChangeState(GameState.GameOver);
-        //Destroy object
-        //efectos
-        //animaciones
-    }
 
+    private void Dead()
+    {
+        isDead = true;
+        Debug.Log($"{gameObject.name} eliminado");
+
+        // NUEVO: avisar al GameManager según quién murió
+        if (GameManager.Instance == null) return;
+
+        if (CompareTag("Player"))
+        {
+            GameManager.Instance.NotifyPlayerDead();
+        }
+        else
+        {
+            GameManager.Instance.NotifyEnemyDefeat();
+        }
+    }
 }

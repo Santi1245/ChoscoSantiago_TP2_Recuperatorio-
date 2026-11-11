@@ -11,7 +11,7 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;  
+    public static GameManager Instance;
 
     [Header("State Settings")]
     [SerializeField] private GameState currentState;
@@ -37,6 +37,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // NUEVO: si no asignaste los enemigos en el Inspector, los busca solo
+        if (enemies == null || enemies.Length == 0)
+        {
+            enemies = FindObjectsByType<EnemyAI>(FindObjectsInactive.Exclude);
+        }
+
         totalEnemies = enemies.Length;
         enemiesRemaining = totalEnemies;
         ChangeState(GameState.Playing);
@@ -101,6 +107,8 @@ public class GameManager : MonoBehaviour
         if (currentState != GameState.Playing) return;
 
         enemiesRemaining--;
+        Debug.Log($"Enemigos restantes: {enemiesRemaining}");
+
         if (enemiesRemaining <= 0)
         {
             ChangeState(GameState.Victory);
