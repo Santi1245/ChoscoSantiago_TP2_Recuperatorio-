@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Ground
   - Character
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -20,9 +21,9 @@ TagManager:
   - Object
   - Item
   - Character
-  - 
-  - 
-  - 
+  - enemy
+  - players
+  - Interactable
   - 
   - 
   - 
