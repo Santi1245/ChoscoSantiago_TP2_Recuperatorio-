@@ -21,7 +21,7 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage(float amount)
     {
         if (isDead) return;
-        if (amount <= 0f) return; // NUEVO: evita daño negativo
+        if (amount <= 0f) return;
 
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
@@ -39,16 +39,24 @@ public class HealthSystem : MonoBehaviour
         isDead = true;
         Debug.Log($"{gameObject.name} eliminado");
 
-        // NUEVO: avisar al GameManager según quién murió
-        if (GameManager.Instance == null) return;
-
-        if (CompareTag("Player"))
+        if (GameManager.Instance != null)
         {
-            GameManager.Instance.NotifyPlayerDead();
+            if (CompareTag("Player"))
+            {
+                GameManager.Instance.NotifyPlayerDead();
+            }
+            else
+            {
+                GameManager.Instance.NotifyEnemyDefeat();
+            }
         }
-        else
+
+        // CAMBIO: destruye el enemigo al morir.
+        // Si el HealthSystem está en un hijo, destruye el padre (el que tiene el EnemyAI).
+        if (!CompareTag("Player"))
         {
-            GameManager.Instance.NotifyEnemyDefeat();
+            Transform target = transform.parent != null ? transform.parent : transform;
+            Destroy(target.gameObject);
         }
     }
 }

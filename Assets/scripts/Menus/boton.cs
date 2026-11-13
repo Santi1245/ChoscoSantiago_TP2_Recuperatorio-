@@ -22,4 +22,9 @@ public class CambiarEscena : MonoBehaviour
     {
         SceneManager.LoadScene("menu");
     }
+
+       public void Tutorial()
+    {
+        SceneManager.LoadScene("Tutorial");
+    }
 }

@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class monedarotacion : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         transform.Rotate(0f, 30f * Time.deltaTime, 0f, Space.World);
@@ -18,7 +13,10 @@ public class monedarotacion : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("+1 punto");
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddScore(1);
+            }
             Destroy(gameObject);
         }
     }

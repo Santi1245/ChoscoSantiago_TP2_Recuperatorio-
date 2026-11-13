@@ -5182,7 +5182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 375638427}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Enemigo 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5250,7 +5250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1978283153780604590, guid: 306d4d6b062183242891232156b9c8f7, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1978283153780604590, guid: 306d4d6b062183242891232156b9c8f7, type: 3}
       propertyPath: m_TagString
@@ -5327,6 +5327,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1978283153780604590, guid: 306d4d6b062183242891232156b9c8f7, type: 3}
       insertIndex: 4
       addedObject: {fileID: 1980745917}
+    - targetCorrespondingSourceObject: {fileID: 1978283153780604590, guid: 306d4d6b062183242891232156b9c8f7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1980745923}
   m_SourcePrefab: {fileID: 100100000, guid: 306d4d6b062183242891232156b9c8f7, type: 3}
 --- !u!4 &391470252 stripped
 Transform:
@@ -9173,7 +9176,8 @@ GameObject:
   - component: {fileID: 670184910}
   - component: {fileID: 670184918}
   - component: {fileID: 670184919}
-  m_Layer: 9
+  - component: {fileID: 670184920}
+  m_Layer: 11
   m_Name: Jugador
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -9189,7 +9193,7 @@ Transform:
   m_GameObject: {fileID: 670184908}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 56, y: 2, z: 35}
+  m_LocalPosition: {x: 53.9576, y: -0.119999886, z: 37.320267}
   m_LocalScale: {x: 14.999683, y: 13.371272, z: 0.74748}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9213,12 +9217,15 @@ MonoBehaviour:
   rayDistance: 0
   offsetGun: {x: 0, y: 0, z: 0}
   sword: {fileID: 1731014927}
-  radius: 0
+  radius: 1.5
   offsetSword: {x: 0, y: 0, z: 0}
-  damage: 20
-  cooldownAttack: 0
-  isPlayer: 0
-  isMelee: 0
+  damage: 5
+  cooldownAttack: 0.5
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  isPlayer: 1
+  isMelee: 1
 --- !u!114 &670184911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9329,8 +9336,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25000003, y: 0.31, z: 0.20000002}
-  m_Center: {x: -0.0000002384236, y: 0.155, z: 0.0000038175904}
+  m_Size: {x: 0.25000003, y: 0.31, z: 0.20000015}
+  m_Center: {x: -0.0000002384236, y: 0.155, z: 0.000003847493}
 --- !u!212 &670184917
 SpriteRenderer:
   serializedVersion: 3
@@ -9425,6 +9432,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2c458cbb53e2334fb4b6bc4ed774666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpriteBillboard
+--- !u!114 &670184920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670184908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d607a8a796f1e94bb19700b8a8fd1e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  interactDistance: 5
+  interactableLayers:
+    serializedVersion: 2
+    m_Bits: 4096
+  interactKey: 101
+  hingeOffsetX: 0.5
+  openAngle: 100
 --- !u!1 &675879664
 GameObject:
   m_ObjectHideFlags: 0
@@ -15854,6 +15880,10 @@ MonoBehaviour:
   enemies: []
   totalEnemies: 0
   enemiesRemaining: 0
+  score: 0
+  scoreText: {fileID: 0}
+  victoryPanel: {fileID: 0}
+  gameOverPanel: {fileID: 0}
 --- !u!4 &1214151478
 Transform:
   m_ObjectHideFlags: 0
@@ -26174,6 +26204,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1980745923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980745913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9901948aee4c5ef4a9d34cd8ddee5f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  maxHealth: 10
+  isDead: 0
 --- !u!1 &1985367216
 GameObject:
   m_ObjectHideFlags: 0

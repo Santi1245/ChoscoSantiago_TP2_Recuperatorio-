@@ -4,28 +4,33 @@ public class GoalZone : MonoBehaviour
 {
     [SerializeField] private Transform goal;
 
+    private bool yaCompletado = false;   // evita que se dispare dos veces
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (yaCompletado) return;
+        if (!other.CompareTag("Player")) return;
+
+        PickItem pickItem = other.GetComponent<PickItem>();
+
+        if (pickItem == null) return;
+
+        GameObject item = pickItem.DropItem();
+
+        if (item != null)
         {
-            PickItem pickItem = other.GetComponent<PickItem>();
+            yaCompletado = true;
+            ItemInZone(item);
+            Debug.Log("completaste el nivel");
 
-            if (pickItem != null)
+            if (GameManager.Instance != null)
             {
-                GameObject item = pickItem.DropItem();
-
-                if (item != null)
-                {
-                    ItemInZone(item);
-
-                    Debug.Log("completaste el nivel");
-                }
-                else
-                {
-                    Debug.Log("Derrota o Llego a la meta pero sin el item");
-                }
+                GameManager.Instance.NotifyGoalZone();
             }
+        }
+        else
+        {
+            Debug.Log("Derrota o Llego a la meta pero sin el item");
         }
     }
 
@@ -38,12 +43,7 @@ public class GoalZone : MonoBehaviour
         Collider col = item.GetComponent<Collider>();
         Rigidbody rb = item.GetComponent<Rigidbody>();
 
-        if (col!= null) col.enabled = false;
-        if (rb!= null) rb.isKinematic = false;
-
-
-
-
-
+        if (col != null) col.enabled = false;
+        if (rb != null) rb.isKinematic = true;   // ojo: estaba en false
     }
 }

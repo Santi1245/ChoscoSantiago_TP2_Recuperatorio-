@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public enum GameState
 {
@@ -21,6 +23,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int totalEnemies;
     [SerializeField] private int enemiesRemaining;
 
+    [Header("Puntaje")]
+    [SerializeField] private int score;
+    [SerializeField] private TMPro.TextMeshProUGUI scoreText;
+
+    [Header("UI")]
+    [SerializeField] private GameObject victoryPanel;
+    [SerializeField] private GameObject gameOverPanel;
+
+    [Header("Escenas")]
+    [SerializeField] private string levelSelectSceneName = "SelectorDeNiveles";
+    [SerializeField] private float victoryDelay = 2f;
+    [SerializeField] private float gameOverDelay = 2f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -32,12 +47,11 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        // Sin DontDestroyOnLoad: cada escena maneja su propio GameManager
     }
 
     void Start()
     {
-        // NUEVO: si no asignaste los enemigos en el Inspector, los busca solo
         if (enemies == null || enemies.Length == 0)
         {
             enemies = FindObjectsByType<EnemyAI>(FindObjectsInactive.Exclude);
@@ -65,23 +79,43 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
                 Debug.Log("Inicio el juego");
                 break;
+
             case GameState.Playing:
                 Time.timeScale = 1f;
+                if (victoryPanel != null) victoryPanel.SetActive(false);
+                if (gameOverPanel != null) gameOverPanel.SetActive(false);
                 Debug.Log("<color=green>ESTADO: jugando</color>");
                 break;
+
             case GameState.Paused:
                 Time.timeScale = 0f;
                 Debug.Log("<color=yellow>ESTADO: pausa</color>");
                 break;
+
             case GameState.Victory:
                 Time.timeScale = 0f;
+                if (victoryPanel != null) victoryPanel.SetActive(true);
                 Debug.Log("<color=cyan>ESTADO: Victoria</color>");
+                StartCoroutine(VolverASeleccionDeNiveles(victoryDelay));
                 break;
+
             case GameState.GameOver:
                 Time.timeScale = 0f;
+                if (gameOverPanel != null) gameOverPanel.SetActive(true);
                 Debug.Log("<color=red>ESTADO: Game Over</color>");
+                StartCoroutine(VolverASeleccionDeNiveles(gameOverDelay));
                 break;
         }
+    }
+
+    private IEnumerator VolverASeleccionDeNiveles(float delay)
+    {
+        // WaitForSecondsRealtime ignora Time.timeScale = 0
+        yield return new WaitForSecondsRealtime(delay);
+
+        Debug.Log("Cargando: " + levelSelectSceneName);
+        Time.timeScale = 1f;   // restaurar antes de cambiar de escena
+        SceneManager.LoadScene(levelSelectSceneName);
     }
 
     public void Paused()
@@ -94,6 +128,13 @@ public class GameManager : MonoBehaviour
         {
             ChangeState(GameState.Playing);
         }
+    }
+
+    public void AddScore(int amount)
+    {
+        score += amount;
+        if (scoreText != null) scoreText.text = $"Puntos: {score}";
+        Debug.Log($"<color=orange>Puntaje: {score}</color>");
     }
 
     public void NotifyPlayerDead()
@@ -109,10 +150,7 @@ public class GameManager : MonoBehaviour
         enemiesRemaining--;
         Debug.Log($"Enemigos restantes: {enemiesRemaining}");
 
-        if (enemiesRemaining <= 0)
-        {
-            ChangeState(GameState.Victory);
-        }
+        // La victoria NO va aca: se gana llegando al GoalZone.
     }
 
     public void NotifyGoalZone()
