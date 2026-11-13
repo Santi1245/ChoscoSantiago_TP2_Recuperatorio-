@@ -105,4 +105,5 @@ lleva a que elijas los 3 niveles y un tutorial)
 ## Capturas
 
 ![Tutorial](docs/Tutorial.png)
-![Nivel 1](docs/Nivel1.png)
+![Nivel 1](docs/nivel1.png)
+
