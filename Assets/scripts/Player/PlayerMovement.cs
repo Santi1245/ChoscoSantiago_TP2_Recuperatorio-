@@ -32,8 +32,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Respawn Settings")]
-    [SerializeField] private float fallLimit = -10f;   
+    [SerializeField] private float fallLimit = -10f;
     private Vector3 respawnPosition;
+
+    [Header("Invisibilidad")]
+    [SerializeField] private float duracionInvisibilidad = 5f;
+    public bool EsInvisible { get; private set; } = false;
 
     void Start()
     {
@@ -138,5 +142,36 @@ public class PlayerMovement : MonoBehaviour
         speed = velocidadOriginal * 2f;
         yield return new WaitForSeconds(5f);
         speed = velocidadOriginal;
+    }
+
+    public void ActivarInvisibilidad()
+    {
+        StartCoroutine(InvisibilidadTemporal());
+    }
+
+    private IEnumerator InvisibilidadTemporal()
+    {
+        EsInvisible = true;
+        Debug.Log("Jugador INVISIBLE");
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            Color c = r.material.color;
+            c.a = 0.35f;
+            r.material.color = c;
+        }
+
+        yield return new WaitForSeconds(duracionInvisibilidad);
+
+        EsInvisible = false;
+        Debug.Log("Jugador VISIBLE");
+
+        foreach (Renderer r in renderers)
+        {
+            Color c = r.material.color;
+            c.a = 1f;
+            r.material.color = c;
+        }
     }
 }
