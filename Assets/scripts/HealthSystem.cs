@@ -7,6 +7,7 @@ public class HealthSystem : MonoBehaviour
     private float currentHealth;
 
     public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
 
     [SerializeField] private bool isDead;
     public bool IsDead => isDead;
@@ -34,6 +35,17 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
+    public void Heal(float amount)
+    {
+        if (isDead) return;
+        if (amount <= 0f) return;
+
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+        Debug.Log($"Salud actual: {currentHealth}");
+    }
+
     private void Dead()
     {
         isDead = true;
@@ -51,8 +63,6 @@ public class HealthSystem : MonoBehaviour
             }
         }
 
-        // CAMBIO: destruye el enemigo al morir.
-        // Si el HealthSystem está en un hijo, destruye el padre (el que tiene el EnemyAI).
         if (!CompareTag("Player"))
         {
             Transform target = transform.parent != null ? transform.parent : transform;

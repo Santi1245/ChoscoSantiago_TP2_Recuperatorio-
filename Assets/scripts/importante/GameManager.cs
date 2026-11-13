@@ -47,7 +47,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        // Sin DontDestroyOnLoad: cada escena maneja su propio GameManager
     }
 
     void Start()
@@ -110,11 +109,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator VolverASeleccionDeNiveles(float delay)
     {
-        // WaitForSecondsRealtime ignora Time.timeScale = 0
         yield return new WaitForSecondsRealtime(delay);
 
         Debug.Log("Cargando: " + levelSelectSceneName);
-        Time.timeScale = 1f;   // restaurar antes de cambiar de escena
+        Time.timeScale = 1f;   
         SceneManager.LoadScene(levelSelectSceneName);
     }
 
@@ -150,7 +148,6 @@ public class GameManager : MonoBehaviour
         enemiesRemaining--;
         Debug.Log($"Enemigos restantes: {enemiesRemaining}");
 
-        // La victoria NO va aca: se gana llegando al GoalZone.
     }
 
     public void NotifyGoalZone()

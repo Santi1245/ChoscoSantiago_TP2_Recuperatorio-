@@ -9,7 +9,6 @@ public class CoinRotation : MonoBehaviour
         velocidadRotacion = 90f;
     }
 
-    // Update is called once per frame
     void Update()
     {
     float giro = Input.GetAxisRaw("Horizontal");

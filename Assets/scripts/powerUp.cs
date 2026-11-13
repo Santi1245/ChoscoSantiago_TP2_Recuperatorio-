@@ -14,7 +14,6 @@ private void Start()
 
 private void OnTriggerEnter (Collider other)
 {
-    //Debug.Log("Algo atraves0 el power up: "+other.gameObject.name);
     if (other.CompareTag("Player"))
     {
         PlayerMovement movimiento = other.GetComponent<PlayerMovement>();
