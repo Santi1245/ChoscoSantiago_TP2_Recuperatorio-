@@ -70,7 +70,6 @@ public class Attack : MonoBehaviour
     {
         if (gun == null)
         {
-            Debug.LogWarning("[Attack] Falta asignar 'Gun' en el Inspector.");
             return;
         }
 
@@ -83,7 +82,6 @@ public class Attack : MonoBehaviour
         else
         {
             isCharacter = false;
-            Debug.Log("[Attack] El raycast no golpeó nada.");
         }
 
         StartCoroutine(AttackCooldown());
@@ -93,16 +91,13 @@ public class Attack : MonoBehaviour
     {
         if (sword == null)
         {
-            Debug.LogWarning("[Attack] Falta asignar 'Sword' en el Inspector.");
             return;
         }
 
         RaycastInfo(offsetSword);
 
-        // Detección principal: por máscara de capas
         Collider[] colliders = Physics.OverlapSphere(origin, radius, targetLayers);
 
-        // Plan B: si la máscara está vacía, barre todo y filtra por tag (como el repo del profe)
         if (colliders.Length == 0)
             colliders = Physics.OverlapSphere(origin, radius);
 
@@ -118,8 +113,6 @@ public class Attack : MonoBehaviour
         }
 
         isCharacter = hitSomething;
-
-        Debug.Log($"[Attack] Melee · radio {radius} · colliders {colliders.Length} · impacto {hitSomething}");
 
         StartCoroutine(AttackCooldown());
     }
@@ -148,15 +141,12 @@ public class Attack : MonoBehaviour
         if (hitObj == null) return false;
         if (hitObj == gameObject) return false;
 
-        // Primero en el mismo objeto del collider (como el profe)
         HealthSystem hs = hitObj.GetComponent<HealthSystem>();
 
-        // Y si quedó en un padre, también lo encuentra
         if (hs == null) hs = hitObj.GetComponentInParent<HealthSystem>();
 
         if (hs == null)
         {
-            Debug.LogWarning($"[Attack] {hitObj.name} no tiene HealthSystem.");
             return false;
         }
 

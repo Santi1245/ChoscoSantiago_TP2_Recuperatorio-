@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
-    public enum AIState { Patrol, Attack, Chase } //solo puede tomar un estado a la vez
+    public enum AIState { Patrol, Attack, Chase } 
 
     [Header("States")]
     [SerializeField] private AIState currentState = AIState.Patrol;
@@ -42,17 +42,6 @@ public class EnemyAI : MonoBehaviour
         {
             playerTransform = player.GetComponent<Transform>();
             healthSystemPlayer = player.GetComponent<HealthSystem>();
-
-            Debug.Log($"[EnemyAI] Jugador encontrado: {player.name}");
-
-            if (healthSystemPlayer == null)
-            {
-                Debug.LogError("[EnemyAI] El jugador NO tiene HealthSystem");
-            }
-        }
-        else
-        {
-            Debug.LogError("[EnemyAI] No encontro player (revisa el tag Player)");
         }
 
         if (!agent.isOnNavMesh)
@@ -66,7 +55,6 @@ public class EnemyAI : MonoBehaviour
         if (!agent.isOnNavMesh) return;
         if (playerTransform == null) return;
 
-        // Si el jugador ya murió, el enemigo vuelve a patrullar
         if (healthSystemPlayer != null && healthSystemPlayer.IsDead)
         {
             if (currentState != AIState.Patrol)
@@ -141,7 +129,6 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        // Mirar al jugador mientras ataca
         Vector3 direction = (playerTransform.position - transform.position).normalized;
         direction.y = 0f;
 
@@ -177,17 +164,14 @@ public class EnemyAI : MonoBehaviour
     {
         if (agent.isOnNavMesh) agent.isStopped = true;
 
-        // Telegrafía: espera antes de pegar, así el jugador puede alejarse
         yield return new WaitForSeconds(attackWindup);
 
-        // Vuelve a chequear que el jugador siga cerca antes de pegar
         if (playerTransform != null &&
             Vector3.Distance(transform.position, playerTransform.position) <= radiusAttack)
         {
             ExecuteAttack();
         }
 
-        // Recuperación: espera después de pegar
         yield return new WaitForSeconds(attackCooldown);
 
         if (agent.isOnNavMesh) agent.isStopped = false;
@@ -197,19 +181,9 @@ public class EnemyAI : MonoBehaviour
 
     private void ExecuteAttack()
     {
-        if (healthSystemPlayer == null)
-        {
-            Debug.LogWarning("[EnemyAI] ExecuteAttack: healthSystemPlayer es NULL");
-            return;
-        }
+        if (healthSystemPlayer == null) return;
+        if (healthSystemPlayer.IsDead) return;
 
-        if (healthSystemPlayer.IsDead)
-        {
-            Debug.LogWarning("[EnemyAI] ExecuteAttack: el jugador ya está muerto");
-            return;
-        }
-
-        Debug.Log($"[EnemyAI] ExecuteAttack: pegando {attackDamage} al jugador");
         healthSystemPlayer.TakeDamage(attackDamage);
     }
 

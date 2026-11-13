@@ -32,26 +32,15 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, interactDistance, interactableLayers))
         {
-            Debug.Log($"[Interaction] Golpeo: {hit.collider.name} | Tag: {hit.collider.tag} | Distancia: {hit.distance:F2}");
-
             if (hit.collider.CompareTag("Door"))
             {
                 InteractDoor(hit.collider.transform);
             }
-            else
-            {
-                Debug.Log($"[Interaction] El objeto no tiene tag Door (tiene '{hit.collider.tag}').");
-            }
-        }
-        else
-        {
-            Debug.Log("[Interaction] El rayo no golpeo nada.");
         }
     }
 
     void InteractDoor(Transform door)
     {
-        // Guardamos el estado cerrado una sola vez
         if (!hasClosedState)
         {
             closedPosition = door.position;
@@ -59,7 +48,6 @@ public class PlayerInteraction : MonoBehaviour
             hasClosedState = true;
         }
 
-        // Restauramos SIEMPRE el estado cerrado antes de girar
         door.position = closedPosition;
         door.rotation = closedRotation;
 
@@ -67,12 +55,9 @@ public class PlayerInteraction : MonoBehaviour
 
         if (isOpen)
         {
-            // La bisagra se calcula desde el estado cerrado, no desde el actual
             Vector3 hingeWorld = door.TransformPoint(new Vector3(-hingeOffsetX, 0f, 0f));
             door.RotateAround(hingeWorld, Vector3.up, -openAngle);
         }
-
-        Debug.Log($"[Door] {(isOpen ? "Abierta" : "Cerrada")}");
     }
 
     void OnDrawGizmosSelected()

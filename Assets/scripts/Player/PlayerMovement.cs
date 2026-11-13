@@ -31,9 +31,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask groundLayer;
 
-    // NUEVO: respawn al caer al vacío
     [Header("Respawn Settings")]
-    [SerializeField] private float fallLimit = -10f;   // altura Y a partir de la cual reaparece
+    [SerializeField] private float fallLimit = -10f;   
     private Vector3 respawnPosition;
 
     void Start()
@@ -44,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
         if (Camera.main != null)
             cameraTransform = Camera.main.transform;
 
-        // NUEVO: guarda el punto de inicio como punto de reaparición
         respawnPosition = transform.position;
     }
 
@@ -84,14 +82,12 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
         rb.linearVelocity = new Vector3(movement.x * speed, rb.linearVelocity.y, movement.z * speed);
 
-        // NUEVO: si se cae al vacío, vuelve al inicio
         if (transform.position.y < fallLimit)
         {
             Respawn();
         }
     }
 
-    // NUEVO: devuelve al jugador al punto de inicio sin inercia
     public void Respawn()
     {
         rb.linearVelocity = Vector3.zero;

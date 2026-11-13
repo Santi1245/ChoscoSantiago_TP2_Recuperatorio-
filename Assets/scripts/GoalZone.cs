@@ -4,7 +4,7 @@ public class GoalZone : MonoBehaviour
 {
     [SerializeField] private Transform goal;
 
-    private bool yaCompletado = false;   // evita que se dispare dos veces
+    private bool yaCompletado = false;  
 
     private void OnTriggerEnter(Collider other)
     {
@@ -44,6 +44,6 @@ public class GoalZone : MonoBehaviour
         Rigidbody rb = item.GetComponent<Rigidbody>();
 
         if (col != null) col.enabled = false;
-        if (rb != null) rb.isKinematic = true;   // ojo: estaba en false
+        if (rb != null) rb.isKinematic = true;   
     }
 }
