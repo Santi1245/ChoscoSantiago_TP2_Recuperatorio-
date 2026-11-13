@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
-    public enum AIState { Patrol, Attack, Chase } 
+    public enum AIState { Patrol, Attack, Chase }
 
     [Header("States")]
     [SerializeField] private AIState currentState = AIState.Patrol;
@@ -28,6 +28,7 @@ public class EnemyAI : MonoBehaviour
     private NavMeshAgent agent;
     private Transform playerTransform;
     private HealthSystem healthSystemPlayer;
+    private PlayerMovement playerMovement;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class EnemyAI : MonoBehaviour
         {
             playerTransform = player.GetComponent<Transform>();
             healthSystemPlayer = player.GetComponent<HealthSystem>();
+            playerMovement = player.GetComponent<PlayerMovement>();
         }
 
         if (!agent.isOnNavMesh)
@@ -56,6 +58,18 @@ public class EnemyAI : MonoBehaviour
         if (playerTransform == null) return;
 
         if (healthSystemPlayer != null && healthSystemPlayer.IsDead)
+        {
+            if (currentState != AIState.Patrol)
+            {
+                currentState = AIState.Patrol;
+                if (agent.isOnNavMesh) agent.isStopped = false;
+                GoNext();
+            }
+            return;
+        }
+
+        // Si el jugador es invisible, el enemigo no lo detecta
+        if (playerMovement != null && playerMovement.EsInvisible)
         {
             if (currentState != AIState.Patrol)
             {
